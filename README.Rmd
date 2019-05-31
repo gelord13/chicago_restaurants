@@ -1,0 +1,125 @@
+---
+title: "README"
+author: "Gabe Lord"
+date: "May 31, 2019"
+output: html_document
+---
+
+
+This app is intended to take information from the city of Chicago concerning
+restaurants and their health inspection violations
+
+The goal of this app is to allow the user to see what restaurants are at what 
+risk levels and whether they passed their inspection
+
+Below is the list of packages used in the creation and use of this app
+
+
+```{r setup, include=FALSE}
+library(tidyverse)
+library(plyr)
+library(dplyr)
+
+
+library(RPostgreSQL) 
+library(postGIStools)
+library(rgdal)
+library(rgeos)
+library(sp)
+library(tmap)
+library(leaflet)
+library(raster)
+library(sf)
+library(RQGIS)
+library(shiny)
+```
+
+
+Information was taken from the city of Chicago data portal
+
+the csv was changed into a shapefile using QGIS
+
+```{r}
+chi_rest <- readOGR(".", "chicago_restaurant")
+```
+
+```{r}
+chi_rest2 <- st_as_sf(chi_rest)
+```
+
+```{r}
+chi_rest2 <- subset(chi_rest2, select = -c(AKA.Name, License.., Facility.T, 
+                                         City, State, Zip, 
+                                         Inspection, Inspecti_1))
+```
+
+```{r}
+chi_rest3 <- head(chi_rest2, 100)
+```
+
+
+```{r}
+crs(chi_rest)
+```
+
+```{r}
+chi_rest = st_set_crs(chi_rest, 4326)
+```
+
+
+```{r}
+
+# Define UI for application that filters map points based on year and minimum population
+ui <- fluidPage(
+   
+   # Application title
+   titlePanel("Restaurants in Chicago"),
+   
+   # Sidebar with a slider input for year, numeric input for population 
+   sidebarLayout(
+      sidebarPanel(
+
+          selectInput("Risk", label = h3("Risk"), 
+                      choices = list("Risk 1 (High)" = 1,
+                                     "Risk 2 (Medium)" = 2,
+                                     "Risk 3 (Low)" = 3), 
+                      selected = 1),
+  
+         
+         radioButtons("Results", label = h3("Results"), 
+                      choices = list("Passed" = 1,
+                                     "Passed w/ Conditions" = 2,
+                                     "Fail" = 3), 
+                      selected = 1)
+      ),
+      
+      # Show the map and table
+      mainPanel(
+         leafletOutput("chi_rest2")
+      )
+   )
+)
+
+# Define server logic required to draw a map and table
+server <- function(input, output) {
+
+   
+   output$chi_rest2 <- renderLeaflet({
+     leaflet(data = chi_rest2) %>%
+       addTiles() %>%
+       addMarkers()
+   })
+}
+
+# Run the application 
+shinyApp(ui = ui, server = server)
+```
+
+ I tried to plot the entire data set but it is too large and would crash r every 
+ time. 
+ After cutting the data down, the shapefile plotted but it was in the wwrong 
+ location
+ I have tried changing the CRS (which is currently set to (
+ +proj=utm +zone=16 +datum=WGS84 +units=m +no_defs).
+ after trying to run
+  I tried st_set_crs() andmake_EPSG() but neither worked

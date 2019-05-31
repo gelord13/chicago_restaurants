@@ -60,14 +60,3 @@ server <- function(input, output) {
 # Run the application 
 shinyApp(ui = ui, server = server)
 
-
-
-
-# I tried to plot the entire data set but it is too large and would crash r every 
-# time. 
-# After cutting the data down, the shapefile plotted but it was in the wwrong 
-# location
-# I have tried changing the CRS (which is currently set to (
-# +proj=utm +zone=16 +datum=WGS84 +units=m +no_defs).
-# after trying to run
-#  I tried st_set_crs() andmake_EPSG() but neither worked
