@@ -67,6 +67,10 @@ chi_rest3 = st_transform(chi_rest3, 4326)
 ```
 
 
+
+Below is the most recent attempt to fix the app. Errors are detailed below this 
+block of code
+
 ```{r}
 
 # Define UI for application that filters map points based on year and minimum population
@@ -79,14 +83,14 @@ ui <- fluidPage(
    sidebarLayout(
       sidebarPanel(
 
-          selectInput("chi_rest3$Risk", label = h3("Risk"), 
+          selectInput("risk", label = h3("Risk"), 
                       choices = list("Risk 1 (High)" = 1,
                                      "Risk 2 (Medium)" = 2,
                                      "Risk 3 (Low)" = 3), 
                       selected = 1),
   
          
-         radioButtons("chi_rest3$Results", label = h3("Results"), 
+         radioButtons("results", label = h3("Results"), 
                       choices = list("Passed" = 1,
                                      "Passed w/ Conditions" = 2,
                                      "Fail" = 3), 
@@ -105,6 +109,8 @@ server <- function(input, output) {
 
    
    output$chi_rest3 <- renderLeaflet({
+    chi_rest3 <- filter(risk == input$Risk,
+                        result == input$Result)
      leaflet(data = chi_rest3) %>%
        addTiles() %>%
        addMarkers()
