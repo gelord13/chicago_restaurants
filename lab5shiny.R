@@ -14,6 +14,8 @@ chi_rest <- subset(chi_rest, select = -c(AKA.Name, License.., Facility.T,
 
 chi_rest2 <- head(chi_rest, 100)
 
+chi_rest3 = st_transform(chi_rest3, 4326)
+
 
 # Define UI for application that filters map points based on year and minimum population
 ui <- fluidPage(
@@ -41,7 +43,7 @@ ui <- fluidPage(
     
     # Show the map and table
     mainPanel(
-      leafletOutput("chi_rest2")
+      leafletOutput("chi_rest3")
     )
   )
 )
@@ -50,8 +52,8 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   
-  output$chi_rest2 <- renderLeaflet({
-    leaflet(data = chi_rest2) %>%
+  output$chi_rest3 <- renderLeaflet({
+    leaflet(data = chi_rest3) %>%
       addTiles() %>%
       addMarkers()
   })
