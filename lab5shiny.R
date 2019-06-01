@@ -17,6 +17,7 @@ chi_rest2 <- head(chi_rest, 100)
 chi_rest3 = st_transform(chi_rest3, 4326)
 
 
+
 # Define UI for application that filters map points based on year and minimum population
 ui <- fluidPage(
   
@@ -27,14 +28,14 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       
-      selectInput("Risk", label = h3("Risk"), 
+      selectInput("chi_rest3$Risk", "Risk"), 
                   choices = list("Risk 1 (High)" = 1,
                                  "Risk 2 (Medium)" = 2,
                                  "Risk 3 (Low)" = 3), 
                   selected = 1),
       
       
-      radioButtons("Results", label = h3("Results"), 
+      radioButtons("chi_rest3$Results", label = h3("Results"), 
                    choices = list("Passed" = 1,
                                   "Passed w/ Conditions" = 2,
                                   "Fail" = 3), 
@@ -61,4 +62,3 @@ server <- function(input, output) {
 
 # Run the application 
 shinyApp(ui = ui, server = server)
-
