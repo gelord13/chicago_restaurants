@@ -124,3 +124,5 @@ I have tried changing the CRS (which is currently set to (
 after trying to run
 I tried st_set_crs() andmake_EPSG() but neither worked
 After this I tried st_transform(x, 4326) which finally worked for plotting.
+
+Unfortunately I am still trying to get me widgets to work with my data
